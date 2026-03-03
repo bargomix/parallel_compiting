@@ -1,3 +1,0 @@
-/home/bargomix/Documents/secondcourse/parallel/secondtask/task2/build/CMakeFiles/task1.dir
-/home/bargomix/Documents/secondcourse/parallel/secondtask/task2/build/CMakeFiles/edit_cache.dir
-/home/bargomix/Documents/secondcourse/parallel/secondtask/task2/build/CMakeFiles/rebuild_cache.dir

@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/matvec_omp.dir/task1.cpp.o -o matvec_omp  /usr/lib/gcc/x86_64-linux-gnu/13/libgomp.so /usr/lib/x86_64-linux-gnu/libpthread.a 
