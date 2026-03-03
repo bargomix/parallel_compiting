@@ -1,0 +1,47 @@
+# ===== Build directories (не пушим) =====
+build/
+build*/
+cmake-build-*/
+*/build/
+*/build*/
+*/cmake-build-*/
+
+# ===== CMake generated =====
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CTestTestfile.cmake
+compile_commands.json
+install_manifest.txt
+
+# ===== Binaries / objects =====
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.exe
+*.out
+a.out
+task1
+task2
+matvec*
+integrate*
+*.bin
+
+# ===== IDE/editor =====
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# ===== Python cache =====
+__pycache__/
+*.pyc
+*.pyo
+
+# ===== Logs/temp (но НЕ csv) =====
+*.log
+*.tmp
