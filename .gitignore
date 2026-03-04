@@ -24,9 +24,6 @@ install_manifest.txt
 *.exe
 *.out
 a.out
-task1
-task2
-matvec*
 integrate*
 *.bin
 
