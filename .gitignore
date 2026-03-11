@@ -5,6 +5,8 @@ cmake-build-*/
 */build/
 */build*/
 */cmake-build-*/
+results.txt
+*.png
 
 # ===== CMake generated =====
 CMakeFiles/
