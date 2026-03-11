@@ -15,9 +15,17 @@ target_compile_options(task1 PRIVATE
 
 target_link_libraries(task1 PRIVATE OpenMP::OpenMP_CXX)
 
-# Можно задавать размер матрицы через -DN=40000 в cmake
-# По умолчанию (если не передали) будет N=20000 из кода
 option(MATVEC_N "Matrix size N for compile-time macro" "")
-if (MATVEC_N)
+if(MATVEC_N)
     target_compile_definitions(task1 PRIVATE N=${MATVEC_N})
+endif()
+
+option(MATVEC_RUNS "Number of benchmark runs" "")
+if(MATVEC_RUNS)
+    target_compile_definitions(task1 PRIVATE RUNS=${MATVEC_RUNS})
+endif()
+
+option(MATVEC_TIME_MODE "0=min, 1=median" "")
+if(MATVEC_TIME_MODE)
+    target_compile_definitions(task1 PRIVATE TIME_MODE=${MATVEC_TIME_MODE})
 endif()
