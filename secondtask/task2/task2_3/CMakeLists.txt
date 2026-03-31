@@ -11,3 +11,4 @@ target_link_libraries(lab2_var1 PRIVATE OpenMP::OpenMP_CXX)
 
 add_executable(lab2_var2 lab2_var2.cpp)
 target_link_libraries(lab2_var2 PRIVATE OpenMP::OpenMP_CXX)
+target_compile_definitions(lab2_var1 PRIVATE SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")

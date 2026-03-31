@@ -140,8 +140,10 @@ int main() {
 
     std::vector<int> Ts = make_threads_list();
 
-    std::filesystem::create_directories("results");
-    std::ofstream f("results/lab2_var1_threads.csv", std::ios::out | std::ios::trunc);
+    std::filesystem::path results_dir = std::filesystem::current_path().parent_path() / "results";
+    std::filesystem::create_directories(results_dir);
+
+    std::ofstream f(results_dir / "lab2_var1_threads.csv", std::ios::out | std::ios::trunc);
 
     f << "threads,init_time_s,work_time_s,checksum,iters,final_diff\n";
 
