@@ -41,6 +41,7 @@ __pycache__/
 *.pyc
 *.pyo
 
-# ===== Logs/temp (но НЕ csv) =====
+# ===== Logs/temp =====
 *.log
 *.tmp
+*.csv
