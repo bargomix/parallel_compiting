@@ -36,7 +36,7 @@ struct RunTimes {
 };
 
 static std::vector<int> make_threads_list() {
-    std::vector<int> base = {1, 2, 4, 7, 8, 16, 20, 40};
+    std::vector<int> base = {1, 2, 4, 6, 8, 16, 20, 40};
     int max_threads = omp_get_num_procs();
     std::vector<int> out;
 
