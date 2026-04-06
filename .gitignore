@@ -28,6 +28,7 @@ install_manifest.txt
 a.out
 integrate*
 *.bin
+*py
 
 # ===== IDE/editor =====
 .vscode/
