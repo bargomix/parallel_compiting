@@ -153,8 +153,12 @@ int main() {
     }
 
     std::filesystem::path csv_path = results_dir / "task3_1_scaling.csv";
-    std::ofstream f(csv_path, std::ios::out | std::ios::trunc);
-    f << "size,threads,init_time_s,work_time_s,checksum,speedup\n";
+    bool write_header = !std::filesystem::exists(csv_path) || std::filesystem::file_size(csv_path) == 0;
+    std::ofstream f(csv_path, std::ios::out | std::ios::app);
+
+    if (write_header) {
+        f << "size,threads,init_time_s,work_time_s,checksum,speedup\n";
+    }
 
     double base_work_time = 0.0;
     for (const RunTimes& run : all_runs) {
