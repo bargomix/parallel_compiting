@@ -1,0 +1,9 @@
+mode,workers,time_s,fps,speedup,output
+single,1,23.971375,14.893,1.000,result_single.mp4
+multi,2,14.968747,23.850,1.601,result_2.mp4
+multi,4,15.268153,23.382,1.570,result_4.mp4
+multi,7,15.159827,23.549,1.581,result_7.mp4
+multi,8,14.566951,24.508,1.646,result_8.mp4
+multi,16,15.542212,22.970,1.542,result_16.mp4
+multi,20,16.287277,21.919,1.472,result_20.mp4
+multi,40,17.195141,20.762,1.394,result_40.mp4
