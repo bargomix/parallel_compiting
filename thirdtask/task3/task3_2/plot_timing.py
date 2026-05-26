@@ -13,6 +13,16 @@ ROOT = Path(__file__).resolve().parent
 RESULTS_DIR = ROOT / "results"
 PLOTS_DIR = ROOT / "plots"
 CSV_PATH = RESULTS_DIR / "timing_results.csv"
+REQUIRED_FIELDS = [
+    "implementation",
+    "clients",
+    "tasks_per_client",
+    "server_workers",
+    "init_time_s",
+    "work_time_s",
+    "stop_time_s",
+    "total_time_s",
+]
 
 
 def mean(values):
@@ -33,8 +43,14 @@ def unique_path(path):
 
 def load_rows():
     rows = []
+
     with CSV_PATH.open(newline="") as f:
-        for row in csv.DictReader(f):
+        reader = csv.DictReader(f)
+        missing = [field for field in REQUIRED_FIELDS if field not in (reader.fieldnames or [])]
+        if missing:
+            raise SystemExit(f"Bad CSV header in {CSV_PATH}. Missing fields: {', '.join(missing)}")
+
+        for row in reader:
             if row.get("implementation") != IMPLEMENTATION:
                 continue
 
@@ -49,7 +65,7 @@ def load_rows():
     return rows
 
 
-def grouped_mean(rows, metric):
+def grouped_mean_by_tasks(rows, metric):
     grouped = defaultdict(list)
     for row in rows:
         grouped[row["tasks_per_client"]].append(row[metric])
@@ -77,7 +93,7 @@ def main():
         ("init_time_s", "init time", "^"),
         ("stop_time_s", "stop time", "v"),
     ]:
-        xs, ys = grouped_mean(rows, metric)
+        xs, ys = grouped_mean_by_tasks(rows, metric)
         line, = plt.plot(xs, ys, marker=marker, linewidth=2, label=label)
         color = line.get_color()
 

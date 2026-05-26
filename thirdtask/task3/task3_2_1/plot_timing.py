@@ -13,6 +13,16 @@ ROOT = Path(__file__).resolve().parent
 RESULTS_DIR = ROOT / "results"
 PLOTS_DIR = ROOT / "plots"
 CSV_PATH = RESULTS_DIR / "timing_results.csv"
+REQUIRED_FIELDS = [
+    "implementation",
+    "clients",
+    "tasks_per_client",
+    "server_workers",
+    "init_time_s",
+    "work_time_s",
+    "stop_time_s",
+    "total_time_s",
+]
 
 
 def mean(values):
@@ -33,8 +43,14 @@ def unique_path(path):
 
 def load_rows():
     rows = []
+
     with CSV_PATH.open(newline="") as f:
-        for row in csv.DictReader(f):
+        reader = csv.DictReader(f)
+        missing = [field for field in REQUIRED_FIELDS if field not in (reader.fieldnames or [])]
+        if missing:
+            raise SystemExit(f"Bad CSV header in {CSV_PATH}. Missing fields: {', '.join(missing)}")
+
+        for row in reader:
             if row.get("implementation") != IMPLEMENTATION:
                 continue
 
@@ -49,14 +65,34 @@ def load_rows():
     return rows
 
 
-def grouped_mean(rows, metric):
+def grouped_mean_by_workers(rows, task_count, metric):
     grouped = defaultdict(list)
     for row in rows:
-        grouped[row["tasks_per_client"]].append(row[metric])
+        if row["tasks_per_client"] == task_count:
+            grouped[row["server_workers"]].append(row[metric])
 
     xs = sorted(grouped)
     ys = [mean(grouped[x]) for x in xs]
     return xs, ys
+
+
+def draw_metric(ax, rows, metric, title):
+    task_values = sorted({row["tasks_per_client"] for row in rows})
+
+    for task_count in task_values:
+        xs, ys = grouped_mean_by_workers(rows, task_count, metric)
+        line, = ax.plot(xs, ys, marker="o", linewidth=2, label=f"{task_count} tasks")
+        color = line.get_color()
+
+        for row in rows:
+            if row["tasks_per_client"] == task_count:
+                ax.scatter(row["server_workers"], row[metric], color=color, alpha=0.25, s=24)
+
+    ax.set_title(title)
+    ax.set_xlabel("Server workers")
+    ax.set_ylabel("Time, seconds")
+    ax.grid(True, linestyle="--", alpha=0.4)
+    ax.legend()
 
 
 def main():
@@ -69,34 +105,19 @@ def main():
 
     PLOTS_DIR.mkdir(exist_ok=True)
 
-    plt.figure(figsize=(10, 6))
-
-    for metric, label, marker in [
-        ("work_time_s", "work time", "o"),
-        ("total_time_s", "total time", "s"),
-        ("init_time_s", "init time", "^"),
-        ("stop_time_s", "stop time", "v"),
-    ]:
-        xs, ys = grouped_mean(rows, metric)
-        line, = plt.plot(xs, ys, marker=marker, linewidth=2, label=label)
-        color = line.get_color()
-
-        for row in rows:
-            plt.scatter(row["tasks_per_client"], row[metric], color=color, alpha=0.25, s=24)
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6), sharex=True)
+    draw_metric(axes[0], rows, "work_time_s", "Work time by workers")
+    draw_metric(axes[1], rows, "total_time_s", "Total time by workers")
 
     workers = sorted({row["server_workers"] for row in rows})
     workers_label = "-".join(str(x) for x in workers)
     task_values = sorted({row["tasks_per_client"] for row in rows})
     task_label = "_".join(str(x) for x in task_values)
 
-    plt.title(f"{IMPLEMENTATION}: timing by tasks per client")
-    plt.xlabel("Tasks per client")
-    plt.ylabel("Time, seconds")
-    plt.grid(True, linestyle="--", alpha=0.4)
-    plt.legend()
-    plt.tight_layout()
+    fig.suptitle(f"{IMPLEMENTATION}: timing by server workers")
+    fig.tight_layout()
 
-    output = PLOTS_DIR / f"{IMPLEMENTATION}_tasks_{task_label}_workers_{workers_label}.png"
+    output = PLOTS_DIR / f"{IMPLEMENTATION}_workers_{workers_label}_tasks_{task_label}.png"
     output = unique_path(output)
     plt.savefig(output, dpi=160)
     print(f"Saved plot: {output}")

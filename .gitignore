@@ -29,6 +29,8 @@ a.out
 integrate*
 *.bin
 *py
+!thirdtask/task3/task3_2/plot_timing.py
+!thirdtask/task3/task3_2_1/plot_timing.py
 
 # ===== IDE/editor =====
 .vscode/
