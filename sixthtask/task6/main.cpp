@@ -12,7 +12,7 @@ static int idx(int i, int j, int n) {
     return i * n + j;
 }
 
-static double lerp(double a, double b, double t) {
+static double linear_interp(double a, double b, double t) {
     return a + (b - a) * t;
 }
 
@@ -27,14 +27,14 @@ static void init_grid(std::vector<double>& a, std::vector<double>& anew, int n) 
 
     for (int i = 0; i < n; i++) {
         double t = static_cast<double>(i) / (n - 1);
-        a[idx(i, 0, n)] = anew[idx(i, 0, n)] = lerp(c00, c10, t);
-        a[idx(i, n - 1, n)] = anew[idx(i, n - 1, n)] = lerp(c01, c11, t);
+        a[idx(i, 0, n)] = anew[idx(i, 0, n)] = linear_interp(c00, c10, t);
+        a[idx(i, n - 1, n)] = anew[idx(i, n - 1, n)] = linear_interp(c01, c11, t);
     }
 
     for (int j = 0; j < n; j++) {
         double t = static_cast<double>(j) / (n - 1);
-        a[idx(0, j, n)] = anew[idx(0, j, n)] = lerp(c00, c01, t);
-        a[idx(n - 1, j, n)] = anew[idx(n - 1, j, n)] = lerp(c10, c11, t);
+        a[idx(0, j, n)] = anew[idx(0, j, n)] = linear_interp(c00, c01, t);
+        a[idx(n - 1, j, n)] = anew[idx(n - 1, j, n)] = linear_interp(c10, c11, t);
     }
 }
 
